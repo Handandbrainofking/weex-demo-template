@@ -21,6 +21,27 @@
       <text class="h4 margin-top-40 margin-bottom-20">Midea 模版项目</text>
       <dof-button
         class="margin-top-80"
+        text="打印测试($toast)"
+        type="primary"
+        size="big"
+        @dofButtonClicked="toast"
+      ></dof-button>
+      <dof-button
+        class="margin-top-80"
+        text="打印测试($alert)"
+        type="primary"
+        size="big"
+        @dofButtonClicked="alert"
+      ></dof-button>
+      <dof-button
+        class="margin-top-80"
+        text="路由示例($router)"
+        type="primary"
+        size="big"
+        @dofButtonClicked="skip"
+      ></dof-button>
+      <dof-button
+        class="margin-top-80"
         text="快速查看"
         type="primary"
         size="big"
@@ -57,10 +78,19 @@ module.exports = {
   methods: {
     jumpTo() {
       let url = 'welcome.js'
-      this.$MID.route.push(url)
+      this.$push(url)
     },
     minibarRightButtonClick() {
       nativeService.reload()
+    },
+    toast() {
+      this.$toast('Hello')
+    },
+    alert() {
+      this.$alert('World')
+    },
+    skip() {
+      this.$push('index.router.js')
     }
   },
   created() {},

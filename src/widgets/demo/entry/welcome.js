@@ -1,4 +1,4 @@
 import App from 'src/widgets/demo/views/welcome'
-import Global from 'src/plugin/global'
+import dolphinweex from 'src/js/dolphinweex.js'
 
-Vue.use(Global)
+Vue.use(dolphinweex)
