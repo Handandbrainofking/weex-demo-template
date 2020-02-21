@@ -9,7 +9,7 @@
 
 <script>
 const globalEvent = weex.requireModule('globalEvent')
-import dolphinweex from 'src/js/dolphinweex.js'
+
 module.exports = {
   data() {
     return {}
