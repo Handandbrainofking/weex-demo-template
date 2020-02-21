@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>bui-weex preview</title>
+  <title>Weex Preview</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -17,7 +17,7 @@
   </header> -->
   <div class="content center">
     <main class="main">
-      <div class="mock-phone" style="width: 1px;height:1px;overflow: hidden">
+      <div class="mock-phone">
         <div class="camera"></div>
         <div class="earpiece"></div>
         <div class="inner">
@@ -30,7 +30,7 @@
       </div>
       <div class="qrcode-box">
         <a class="qrcode" id="qrcode" target="_blank"></a>
-        <p class="qrcode-tips">请使用聆客开发者模式中的 - <a>小程序调试</a> - 扫描上面二维码.</p>
+        <p class="qrcode-tips">Use <a target="_blank" href="https://weex-project.io/playground.html">Weex playground app</a> to scan it.</p>
         <div class="pages-box">
 
         </div>
@@ -41,6 +41,7 @@
     (function(){
       const page = getUrlParam('page');
       const entrys = getUrlParam('entrys');
+      const cate_name = getUrlParam('cate_name')
       function getUrlParam (key) {
         var reg = new RegExp('[?|&]' + key + '=([^&]+)')
         var match = location.search.match(reg)
@@ -67,16 +68,17 @@
         var contents = '';
         pageEntrys.forEach(function(entry){
           if (entry === getUrlParam('page').replace('.js', '')) {
-            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
+            contents += `<a href="?page=${entry}.js&entrys=${entrys}&cate_name=${cate_name}" class="page-item active">${entry}</a>`
           }
           else {
-            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item">${entry}</a>`
+            contents += `<a href="?page=${entry}.js&entrys=${entrys}&cate_name=${cate_name}" class="page-item">${entry}</a>`
           }
         })
         $pages.innerHTML = contents;
       }
       var host = window.location.host;
-      createQRCode(`http://${host}/dist/${page || 'index.js'}`)
+      createQRCode(`http://${host}/dist/${cate_name}/${page || 'index.js'}`)
+      console.log('扫码地址：'+ `http://${host}/dist/${cate_name}/${page || 'index.js'}`)
     })();
   </script>
 </body>
