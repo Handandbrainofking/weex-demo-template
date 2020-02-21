@@ -10,7 +10,8 @@
   "author": "",
   "scripts": {
     "sass": "sass --watch src/css:src/css",
-    "start": "npm run serve",
+    "start": "npm run clean:all && npm run serve",
+    "clean:all": "rimraf ./.temp && rimraf ./dist && rimraf ./release && rimraf ./publish && rimraf ./publish.zip",
     "build": "webpack --env.NODE_ENV=production",
     "dev": "webpack --env.NODE_ENV=common --progress --watch",
     "serve": "cross-env CATE_NAME=T0x13 webpack-dev-server --env.NODE_ENV=development --progress",
@@ -40,6 +41,7 @@
     "node-notifier": "^5.1.2",
     "node-sass": "^4.9.3",
     "portfinder": "^1.0.13",
+    "rimraf": "^2.6.2",
     "sass-loader": "^7.1.0",
     "script-ext-html-webpack-plugin": "^1.8.5",
     "vue-loader": "^12.2.0",
