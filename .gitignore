@@ -12,5 +12,12 @@
 /package-lock.json
 /publish.zip
 /publish
+
+*/*.iml
+*/.gradle
+*/local.properties
+*/.idea
+*/build
 /.temp
 
+/src/widgets/T0x13
