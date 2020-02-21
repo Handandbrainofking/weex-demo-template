@@ -48,6 +48,7 @@ const globalEvent = weex.requireModule('globalEvent')
 module.exports = {
   data: function() {
     return {
+      name: 'router',
       leftButton: './assets/image/header/back_black@2x.png',
       rightButton: './assets/image/header/refresh.png',
       id: 'weex router'

@@ -18,7 +18,7 @@
     <div class="flex-column center margin-top-80">
       <dof-image src="/assets/image/logo.png" width="150px" height="150px"></dof-image>
       <text class="h2">{{ title }}</text>
-      <text class="h4 margin-top-40 margin-bottom-20">Midea 模版项目</text>
+      <text class="h4 margin-top-40 margin-bottom-20">{{ subTitle }}</text>
       <dof-button
         class="margin-top-80"
         text="打印测试($toast)"
@@ -42,7 +42,7 @@
       ></dof-button>
       <dof-button
         class="margin-top-80"
-        text="快速查看"
+        text="快速查看s"
         type="primary"
         size="big"
         @dofButtonClicked="jumpTo"
@@ -59,13 +59,16 @@ import nativeService from 'src/service/nativeService'
 const globalEvent = weex.requireModule('globalEvent')
 
 module.exports = {
+  name: 'home',
   components: {
     DofMinibar,
     DofButton,
     DofImage
   },
   data: () => ({
+    name: 'home',
     title: 'Dolphin Weex',
+    subTitle: '',
     leftButton: './assets/image/header/back_black@2x.png',
     rightButton: './assets/image/header/refresh.png',
     headerStyle: {
@@ -75,6 +78,9 @@ module.exports = {
       letterSpacing: 0
     }
   }),
+  mounted() {
+    this.subTitle = 'Midea 模版项目'
+  },
   methods: {
     jumpTo() {
       let url = 'welcome.js'
@@ -84,7 +90,7 @@ module.exports = {
       nativeService.reload()
     },
     toast() {
-      this.$toast('Hello')
+      this.$toast(JSON.stringify(this.$options.name))
     },
     alert() {
       this.$alert('World')
@@ -92,9 +98,7 @@ module.exports = {
     skip() {
       this.$push('index.router.js')
     }
-  },
-  created() {},
-  mounted() {}
+  }
 }
 </script>
 
