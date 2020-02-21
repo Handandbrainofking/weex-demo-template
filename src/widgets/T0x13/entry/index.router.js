@@ -1,5 +1,5 @@
 // 入口*.vue文件，对象命名为"App"，在编译文件"webpack.common.conf.js"里引用
 import App from 'src/widgets/T0x13/views/indexrouter.vue'
 import router from './router/router.js';
-import buiweex from 'src/js/buiweex.js';
-Vue.use(buiweex);
+import dolphinweex from 'src/js/dolphinweex.js';
+Vue.use(dolphinweex);

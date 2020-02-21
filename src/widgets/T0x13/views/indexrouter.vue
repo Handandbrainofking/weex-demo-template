@@ -1,72 +1,67 @@
 <template>
-    <div class="flex-column">
-        <div class="panel">
-            <!--<text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>tab1</text>-->
-            <text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>首页</text>
-            <text class='link' :style="{'color:active': 'black'}" @click='linkTo(`/focus/${id}`)'>关注</text>
-            <text class='link' :style="{'color:active': 'black'}" @click='linkTo("/recommend")'>推荐</text>
-        </div>
-        <div class="span1" style="height: 750px;">
-            <router-view></router-view>
-        </div>
-
-
-
+  <div class="flex-column">
+    <div class="panel">
+      <!--<text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>tab1</text>-->
+      <text class="link" :style="{ 'color:active': 'black' }" @click="linkTo('/')">首页</text>
+      <text class="link" :style="{ 'color:active': 'black' }" @click="linkTo(`/focus/${id}`)">关注</text>
+      <text class="link" :style="{ 'color:active': 'black' }" @click="linkTo('/recommend')">推荐</text>
     </div>
+    <div class="span1" style="height: 750px;">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
-<style lang="scss" src="src/css/buiweex.scss"></style>
+<style lang="scss" src="src/css/dolphinweex.scss"></style>
 <style scoped>
-    .panel {
-        flex-direction: row;
-        height: 100px;
-        border-bottom-width: 1px;
-        border-color: #eeeeee;
-        justify-content: space-between;
-    }
-    .link{
-        line-height: 100px;
-        text-align: center;
-        flex: 1;
-        color: #00B4FF;
-    }
+.panel {
+  flex-direction: row;
+  height: 100px;
+  border-bottom-width: 1px;
+  border-color: #eeeeee;
+  justify-content: space-between;
+}
+.link {
+  line-height: 100px;
+  text-align: center;
+  flex: 1;
+  color: #00b4ff;
+}
 </style>
 
 <script>
-    const globalEvent = weex.requireModule('globalEvent');
-    module.exports = {
-        data: function () {
-            return {
-                leftItem: {
-                    icon: 'ion-chevron-left'
-                },
-                id: "weex router"
-            }
-        },
-        methods: {
-            back() {
-                this.$pop();
-            },
-            linkTo(path){
-                //点击后改变路由
-                this.$router.push({
-                    path: path
-                });
-            }
-
-        },
-        components: {
-        },
-        watch: {
-            $route(to,from){
-                // this.$alert(to.path);
-            }
-        },
-        mounted: function () {
-            // this.$alert(this.$route);
-            globalEvent.addEventListener("androidback",(e)=> {
-                this.$pop();
-            });
-        }
+const globalEvent = weex.requireModule('globalEvent')
+module.exports = {
+  data: function() {
+    return {
+      leftItem: {
+        icon: 'ion-chevron-left'
+      },
+      id: 'weex router'
     }
+  },
+  methods: {
+    back() {
+      this.$pop()
+    },
+    linkTo(path) {
+      //点击后改变路由
+      this.$router.push({
+        path: path
+      })
+    }
+  },
+  components: {},
+  watch: {
+    $route(to, from) {
+      // this.$alert(to.path);
+    }
+  },
+  mounted: function() {
+    // this.$alert(this.$route);
+    globalEvent.addEventListener('androidback', e => {
+      this.$pop()
+    })
+  }
+}
 </script>
