@@ -1,0 +1,26 @@
+@import "common";
+
+.bui-grid-select-box{
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.bui-grid-select{
+  justify-content: center;
+  border-radius: 8px;
+  border-width: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.bui-grid-select-title{
+  lines: 1;
+  line-height: 30px;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-size: 26px;
+}
+.bui-grid-select-img{
+  position: absolute;
+  right: 1px;
+  bottom: -3px;
+}

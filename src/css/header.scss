@@ -1,0 +1,48 @@
+@charset "UTF-8";
+@import "common";
+
+.bui-header{
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.bui-header-left{
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  //justify-content: flex-start;
+  padding-left: $nb10;
+}
+
+.bui-header-main{
+  flex: 2;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.bui-header-right{
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: $nb10;
+}
+
+.bui-header-title{
+  font-size: $nb34;
+  text-align: center;
+  lines:1;
+  text-overflow:ellipsis;
+}
+.bui-header-text{
+  font-size: $nb34;
+  text-align: center;
+}
+
+.hot{
+  padding-left: $nb10;
+  padding-right: $nb10;
+}
+

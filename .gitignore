@@ -1,0 +1,16 @@
+/node_modules
+/dist
+/.idea
+/.sass-cache
+/src/css/.sass-cache
+/src/css/*.css
+/src/css/*.css.map
+*log
+**/.DS_Store
+/release
+/platforms
+/package-lock.json
+/publish.zip
+/publish
+/.temp
+

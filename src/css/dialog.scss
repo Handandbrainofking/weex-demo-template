@@ -1,0 +1,66 @@
+@import "common";
+
+$dialog_height: 200px;
+$dialog_content-height: 220px;
+$dialog_top:300px;
+
+.bui-dialog1 {
+  background-color: $color_white;
+  border-radius: $nb10;
+  height: $dialog_height;
+  top: $dialog_top;
+  left: $nb50;
+  right: $nb50;
+  flex: 1;
+}
+.bui-dialog{
+  position: fixed;
+  background-color: $color_white;
+  border-radius: $nb10;
+  top: 300px;
+  left: $nb50;
+  right: $nb50;
+}
+
+.bui-dialog-title {
+  justify-content: center;
+  height: $nb80;
+  padding-left: $nb30;
+  padding-right: $nb30;
+}
+
+.dialog-title-text {
+  color: $color_black;
+  font-size: $nb35;
+}
+
+.bui-dialog-content {
+  height: $dialog_content-height;
+  padding-left: $nb30;
+  padding-right: $nb30;
+  padding-bottom: $nb32;
+}
+
+.bui-dialog-footer {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: $nb90;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: $color_border;
+}
+
+.dialog-action-text {
+  flex: 1;
+  text-align: center;
+  font-size: $nb32;
+  color: $color_primary;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: $color_border;
+}
+
+.dialog-action-text:active {
+  color: $color_black;
+}

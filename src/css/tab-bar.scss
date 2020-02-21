@@ -1,0 +1,17 @@
+
+.tab-bar{
+  //display: flex;
+  flex-direction: row;
+  /*flex-wrap : nowrap;*/
+  align-items: center;
+}
+.tab-bar-item{
+  padding: 10px;
+  //display: flex;
+  align-items: center;
+}
+.tab-bar-text{
+  margin-top: 10px;
+  lines: 1;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,22 @@
+@import "common";
+
+$form_text_color:#999999;
+
+.bui-form-label {
+  width: 200px;
+  font-size: 35px;
+  color: $form_text_color;
+  lines: 1;
+  text-overflow: ellipsis;
+}
+
+.bui-form-input{
+  flex: 1;
+  font-size: 35px;
+  height: 80px;
+}
+
+.bui-form-switch{
+  right: 0px;
+  background-color: #FF0000;
+}

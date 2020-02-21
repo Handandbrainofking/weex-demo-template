@@ -1,0 +1,61 @@
+@import "common";
+
+.radio-box {
+  align-items: center;
+}
+.checkbox{
+  border-bottom-width: 1px;
+  border-bottom-color: #e2e2e2;
+}
+.checkbox:active{
+  background-color: #f5f5f5;
+}
+
+.radio-label {
+  font-size: $nb30;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+.undisabled{
+  opacity: 1;
+}
+
+.switch-box {
+  height: 80px;
+  flex-direction: row;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.switch {
+  position: absolute;
+  right: 0px;
+  top: 15px;
+}
+
+.switch-label {
+  font-size: $nb30;
+}
+
+.flex-column {
+  /*flex-direction: column;*/
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-fluid{
+  flex-wrap: wrap;
+}
+
+.cb-flex-9{
+  flex: 9;
+}
+.cb-flex-1{
+  flex: 1;
+  flex-direction:row;
+  justify-content:flex-end;
+}

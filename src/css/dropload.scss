@@ -1,0 +1,35 @@
+@import "_var";
+@import "_mixin";
+@include b(dropload){
+	flex : 1;
+	display: flex;
+
+	@include e(refresh){
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		@include padding('y',30px)
+	}
+	@include e(text){
+		color : $primary;
+		font-size: 30px;
+		margin-right: 20px;
+	}
+	@include e(indicator){
+	    height: 40px;
+	    width: 40px;
+		color : $primary;
+	}
+	@include e(loading){
+		width: 750px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+
+		height: 100px;
+	}
+
+
+}

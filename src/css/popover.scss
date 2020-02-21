@@ -1,0 +1,51 @@
+@import "_var";
+@import "_mixin";
+@include b(popover){
+	
+	@include e(mask){
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #000;
+		opacity: 0.5;
+	}
+	
+	@include e(wrap){
+		position: fixed;
+		opacity: 0;
+
+	}
+	@include e(inner){
+		position: absolute;
+		left: 40px;
+		top: 40px;
+		right: 40px;
+		bottom: 40px;
+		background-color: #fff;
+	}
+	@include e(arrow){
+		position: absolute;
+		
+	}
+
+	@include e(list){
+		flex : 1;
+	}
+	@include e(title){
+
+		@include padding(y,8px);
+		font-size: 30px;
+		color : #17233d;
+		@include ellipsis;
+		background-color: #fff;
+	}
+	@include e(content){
+		font-size: 26px;
+		@include padding(y,8px);
+		color: #515a6e;
+		background-color: #fff;
+	}
+
+}
