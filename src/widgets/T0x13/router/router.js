@@ -1,8 +1,8 @@
 /*global Vue*/
 import Router from 'vue-router'
-import approuter from 'src/views/example/router/router.vue'
-import test1 from 'src/views/example/router/test1.vue'
-import test2 from 'src/views/example/router/test2.vue'
+import HOME from 'src/widgets/T0x13/views/router/home.vue'
+import FOCUS from 'src/widgets/T0x13/views/router/focus.vue'
+import RECOMMEND from 'src/widgets/T0x13/views/router/recommend.vue'
 
 Vue.use(Router);
 
@@ -10,17 +10,17 @@ export default new Router({
   routes: [
     {
         path: '/',
-        name: 'approuter',
-        component: approuter
+        name: 'home',
+        component: HOME
     },{
         //传参
-        path: '/test1/:id',
-        name: 'test1',
-        component: test1
+        path: '/focus/:id',
+        name: 'focus',
+        component: FOCUS
     },{
-        path: '/test2',
-        name: 'test2',
-        component: test2
+        path: '/recommend',
+        name: 'recommend',
+        component: RECOMMEND
     }
   ]
 })

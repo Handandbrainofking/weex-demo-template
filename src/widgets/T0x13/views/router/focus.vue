@@ -1,6 +1,6 @@
 <template>
     <div class="span1 center">
-        <text>路由内容test1</text>
+        <text>路由：关注 (FOCUS)</text>
         <text>传入的路由参数： {{$route.params.id}}</text>
     </div>
 </template>

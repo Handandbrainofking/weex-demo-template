@@ -1,6 +1,6 @@
 <template>
     <div class="span1 center">
-        <text>路由内容test2</text>
+        <text>路由：推荐 (recommend)</text>
         <bui-button type="primary" value="返回" @click="jumpTo"></bui-button>
     </div>
 </template>

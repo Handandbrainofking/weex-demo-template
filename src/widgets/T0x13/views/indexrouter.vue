@@ -2,9 +2,9 @@
     <div class="flex-column">
         <div class="panel">
             <!--<text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>tab1</text>-->
-            <text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>tab1</text>
-            <text class='link' :style="{'color:active': 'black'}" @click='linkTo(`/test1/${id}`)'>tab2</text>
-            <text class='link' :style="{'color:active': 'black'}" @click='linkTo("/test2")'>tab3</text>
+            <text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>首页</text>
+            <text class='link' :style="{'color:active': 'black'}" @click='linkTo(`/focus/${id}`)'>关注</text>
+            <text class='link' :style="{'color:active': 'black'}" @click='linkTo("/recommend")'>推荐</text>
         </div>
         <div class="span1" style="height: 750px;">
             <router-view></router-view>
@@ -40,7 +40,7 @@
                 leftItem: {
                     icon: 'ion-chevron-left'
                 },
-                id: "buiweex"
+                id: "weex router"
             }
         },
         methods: {
