@@ -1,13 +1,16 @@
 const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const ip = require('ip').address();
+console.log(`${process.env.CATE_NAME} 项目启动中 ……`)
+const project_category_name = process.env.CATE_NAME || 'T0x13';
+
 const config = {
   root: ROOT,
   // webpack-dev-server
   pluginConfigPath: 'plugins/plugins.json',
   pluginFilePath: 'plugins/plugins.js',
   // router
-  routerFilePath: 'router/**',
+  routerFilePath: `widgets/${project_category_name}/router/**`,
   routerWebDir: '.temp/web/router',
   routerWeexDir: '.temp/weex/router',
   // common
