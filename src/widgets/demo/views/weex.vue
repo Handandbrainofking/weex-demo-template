@@ -42,7 +42,7 @@
       ></dof-button>
       <dof-button
         class="margin-top-80"
-        text="快速查看s"
+        text="快速查看"
         type="primary"
         size="big"
         @dofButtonClicked="jumpTo"
@@ -59,7 +59,6 @@ import nativeService from 'src/service/nativeService'
 const globalEvent = weex.requireModule('globalEvent')
 
 module.exports = {
-  name: 'home',
   components: {
     DofMinibar,
     DofButton,

@@ -56,7 +56,6 @@ export default {
   },
   data() {
     return {
-      name: 'welcome',
       leftButton: './assets/image/header/back_black@2x.png',
       rightButton: './assets/image/header/refresh.png',
       word: 'it is time to develop plugins yourself',
