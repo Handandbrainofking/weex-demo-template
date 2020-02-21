@@ -10,7 +10,7 @@
   "author": "",
   "scripts": {
     "start": "npm run clean:all && npm run serve",
-    "serve": "cross-env CATE_NAME=T0x13 webpack-dev-server --env.NODE_ENV=development --progress",
+    "serve": "cross-env CATE_NAME=demo webpack-dev-server --env.NODE_ENV=development --progress",
     "sass": "sass --watch src/css:src/css",
     "clean:all": "rimraf ./.temp && rimraf ./dist && rimraf ./release && rimraf ./publish && rimraf ./publish.zip",
     "build": "webpack --env.NODE_ENV=production",
