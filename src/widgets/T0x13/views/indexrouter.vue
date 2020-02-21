@@ -1,5 +1,19 @@
 <template>
   <div class="flex-column">
+    <dof-minibar
+      title="欢迎页"
+      backgroundColor="transparent"
+      textColor="#404040"
+      @dofMinibarLeftButtonClicked="minibarLeftButtonClick"
+      @dofMinibarRightButtonClicked="minibarRightButtonClick"
+    >
+      <div slot="left">
+        <image :src="leftButton" style="height: 55px;width: 55px;transform:translateX(-10px);"></image>
+      </div>
+      <div slot="right" class="right-img-wrapper">
+        <image :src="rightButton" style="height: 32px;width: 32px;"></image>
+      </div>
+    </dof-minibar>
     <div class="panel">
       <!--<text class='link' :style="{'color:active': 'black'}" @click='linkTo("/")'>tab1</text>-->
       <text class="link" :style="{ 'color:active': 'black' }" @click="linkTo('/')">首页</text>
@@ -34,9 +48,8 @@ const globalEvent = weex.requireModule('globalEvent')
 module.exports = {
   data: function() {
     return {
-      leftItem: {
-        icon: 'ion-chevron-left'
-      },
+      leftButton: './assets/image/header/back_black@2x.png',
+      rightButton: './assets/image/header/refresh.png',
       id: 'weex router'
     }
   },

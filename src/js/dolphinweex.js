@@ -10,19 +10,20 @@ const meta = weex.requireModule('meta')
 const app = weex.requireModule('AppModule') //仅支持在Link中使用
 
 import util from './util.js'
+import { DofMinibar } from 'dolphin-weex-ui'
 
 let dolphinweex = {
   /**
    * 吐司信息
    * @param msg {string} 提示文本
    */
-  toast(msg) {
+  toast(msg, duration = 1) {
     if (typeof msg !== 'string') {
       msg = JSON.stringify(msg)
     }
     modal.toast({
       message: msg || '',
-      duration: 1
+      duration: duration
     })
   },
 
@@ -444,7 +445,7 @@ let dolphinweex = {
     let that = dolphinweex
     Vue.mixin({
       components: {
-        'bui-header': that.buiHeader
+        'dof-minibar': DofMinibar
       }
     })
 
