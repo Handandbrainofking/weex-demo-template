@@ -17,7 +17,7 @@ const config = {
   sourceDir: 'src',
   templateWebDir: '.temp/web',
   templateWeexDir: '.temp/weex',
-  entryFilePath: 'entry/**',    //入口文件
+  entryFilePath: `widgets/${project_category_name}/entry/**`,     //入口文件
   // Module exclude from compile process
   excludeModuleReg: /node_modules(?!(\/|\\).*(weex).*)/,
   // Filter for entry files

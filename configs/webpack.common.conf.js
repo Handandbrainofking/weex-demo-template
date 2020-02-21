@@ -12,6 +12,7 @@ const vueWebRouter = helper.rootNode(config.routerWebDir);
 const vueWeexRouter = helper.rootNode(config.routerWeexDir);
 const webEntry = {};
 const weexEntry = {};
+const project_category_name = process.env.CATE_NAME || 'base';
 
 //输出web端入口文件的内容
 const getWebEntryFileContent = (entryPath, vueFilePath, routerB) => {
@@ -116,8 +117,7 @@ const plugins = [
     }),
     //  文件拷贝插件,将图片和字体拷贝到dist目录
     new copy([
-        {from: './src/image', to: "./image"},
-        {from: './src/font', to: "./font"}
+        {from: `./src/widgets/${project_category_name}/assets/image`, to: `./assets/image`},
     ]),
 ];
 
