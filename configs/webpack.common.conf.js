@@ -126,7 +126,7 @@ const plugins = [
 // 公共配置
 const getBaseConfig = () => ({
     output: {
-        path: helper.rootNode('./dist')
+        path: helper.rootNode(`./dist/${project_category_name}`)
     },
     /**
      * Options affecting the resolving of modules.
