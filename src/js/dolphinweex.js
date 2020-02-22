@@ -4,11 +4,12 @@
 const modal = weex.requireModule('modal')
 const animation = weex.requireModule('animation')
 const navigator = weex.requireModule('navigator')
-const navigatorEx = weex.requireModule('NavigatorExModule')
+const navigatorEx = weex.requireModule('NavigatorExModule') //仅支持在native中使用
 const stream = weex.requireModule('stream')
 const meta = weex.requireModule('meta')
-const app = weex.requireModule('AppModule') //仅支持在Link中使用
+const app = weex.requireModule('bridgeModule') //仅支持在native中使用
 
+import bridgeCore from 'bridgecore'
 import util from './util.js'
 import { DofMinibar } from 'dolphin-weex-ui'
 
@@ -440,14 +441,26 @@ let dolphinweex = {
       app.showError(options)
     } catch (e) {}
   },
+  native: {
+    name: '舒适化',
+    print() {
+      modal.toast({
+        message: 'hello2'
+      })
+    }
+  },
 
   install(Vue, options) {
     let that = dolphinweex
     Vue.mixin({
       components: {
         'dof-minibar': DofMinibar
+      },
+      created() {
+        // this.$toast('dolphinweex')
       }
     })
+    Vue.prototype.$native = bridgeCore
 
     Vue.prototype.$alert = that.alert
 

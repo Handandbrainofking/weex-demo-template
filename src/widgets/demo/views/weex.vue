@@ -55,7 +55,7 @@
 </template>
 <script>
 import { DofMinibar, DofImage, DofButton } from 'dolphin-weex-ui'
-import nativeService from 'src/service/nativeService'
+
 const globalEvent = weex.requireModule('globalEvent')
 
 module.exports = {
@@ -79,6 +79,7 @@ module.exports = {
   }),
   mounted() {
     this.subTitle = 'Midea 模版项目'
+    this.$native.print()
   },
   methods: {
     jumpTo() {
@@ -86,10 +87,11 @@ module.exports = {
       this.$push(url)
     },
     minibarRightButtonClick() {
-      nativeService.reload()
+      this.$native.reload()
     },
     toast() {
-      this.$toast(JSON.stringify(this.$options.name))
+      this.$toast('hello')
+      this.$native.hapticFeedback()
     },
     alert() {
       this.$alert('World')

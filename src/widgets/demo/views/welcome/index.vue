@@ -48,7 +48,6 @@ import { DofCell2, DofMinibar } from 'dolphin-weex-ui'
 const lottieModule = weex.requireModule('lottieModule')
 import circle from '../../assets/lottie/circle.json'
 import egg from '../../assets/lottie/color-egg.json'
-import nativeService from 'src/service/nativeService'
 
 export default {
   components: {
@@ -77,7 +76,7 @@ export default {
   },
   methods: {
     minibarRightButtonClick() {
-      nativeService.reload()
+      this.$native.reload()
     }
   }
 }

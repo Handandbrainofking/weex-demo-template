@@ -62,6 +62,9 @@ module.exports = {
       this.$router.push({
         path: path
       })
+    },
+    minibarRightButtonClick() {
+      this.$native.reload()
     }
   },
   components: {},
@@ -71,7 +74,7 @@ module.exports = {
     }
   },
   mounted: function() {
-    // this.$alert(this.$route);
+    this.$alert(this.$route)
     globalEvent.addEventListener('androidback', e => {
       this.$pop()
     })
