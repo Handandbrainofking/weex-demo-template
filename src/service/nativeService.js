@@ -3,16 +3,18 @@ const navigator = weex.requireModule('navigator')
 const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage')
 const bridgeModule = weex.requireModule('bridgeModule')
-const blueToothModule = weex.requireModule('blueToothModule')
+// const blueToothModule = weex.requireModule('blueToothModule');
+const singleBlueToothModule = weex.requireModule('singleBlueToothModule') // ^5.9.0
 const blueToothMeshModule = weex.requireModule('blueToothMeshModule')
 const globalEvent = weex.requireModule('globalEvent')
+const aiSpeechModule = weex.requireModule('aiSpeechModule') // ^5.9.0
 
 const isIos = weex.config.env.platform == 'iOS' ? true : false
-import debugUtil from 'src/util/debugUtil'
-import util from 'src/util/util'
+import debugUtil from '../util/debugUtil'
+import util from '../util/util'
 
 var isDummy = false
-// import Mock from 'src/mock'  //正式场上线时注释掉
+// import Mock from './mock'  //正式场上线时注释掉
 
 const debugLogSeperator = '**************************************\n'
 
@@ -68,11 +70,13 @@ export default {
             viewTag: string - 给跳转后的页面设置标识，可用于goBack时指定返回页面
             transparent: 'true/false', //新页面背景是否透明
             animatedType: 'slide_bottomToTop' //新页面出现动效类型
+            bgColor: 设置weex页面颜色
         }
 
     */
   goTo(path, options, params) {
     var url
+
     if (params) {
       path +=
         (path.indexOf('?') == -1 ? '?' : '&') +
@@ -234,14 +238,18 @@ export default {
       if (callback) callback()
     })
   },
-  toast(message, duration) {
+  toast(message, duration, bgStyle) {
     if (typeof message == 'object') {
       message = JSON.stringify(message)
     }
     if (platform == 'Web') {
       mm.toast({ message: message, duration: duration || 1.5 })
     } else {
-      bridgeModule.toast({ message: message, duration: duration || 1.5 })
+      bridgeModule.toast({
+        message: message,
+        duration: duration || 1.5,
+        bgStyle: bgStyle
+      })
     }
   },
   alert(message, callback, okTitle) {
@@ -274,9 +282,13 @@ export default {
       }
     )
   },
-  showLoading() {
+  showLoading(params = {}) {
     if (this.isDummy != true) {
-      bridgeModule.showLoading()
+      if (util.toNum(weex.config.env.appVersion) >= util.toNum('5.11.0')) {
+        bridgeModule.showLoading(params)
+      } else {
+        bridgeModule.showLoading()
+      }
     }
   },
   hideLoading() {
@@ -396,6 +408,14 @@ export default {
   },
 
   //^5.0.0发送中台网络请求：此接口固定Post到中台https地址及端口
+  /*
+    name: 'gateway/subdevice/search', //请求接口路径url，或者serviceList的key,
+    params(可选): {
+        method: 'POST', //POST/GET, 默认POST
+        headers: {}, //请求header
+        data: {} //请求参数
+        }
+    */
   sendCentralCloundRequest(name, params, options = { isShowLoading: true }) {
     return new Promise((resolve, reject) => {
       if (this.isDummy != true) {
@@ -481,7 +501,6 @@ export default {
           this.showLoading()
         }
         let msgid = self.genMessageId()
-
         stream.fetch(requestParams, resData => {
           debugUtil.debugLog(debugLogSeperator, `request(${msgid}): `, requestParams)
           debugUtil.debugLog(`response(${msgid}): `, resData, debugLogSeperator)
@@ -647,7 +666,7 @@ export default {
   },
   /* *****即将删除, IOS已经做了改进，不在需要已callbackFunction回调callback ********/
 
-  //发送Lua指令接口ƒ
+  //发送Lua指令接口
   sendLuaRequest(params, isShowLoading = true) {
     return new Promise((resolve, reject) => {
       if (!params.operation) {
@@ -993,6 +1012,14 @@ export default {
     }
     return this.commandInterfaceWrapper(param)
   },
+  //获取指定家庭信息以及设备列表
+  getTargetHomeInfo(params) {
+    /* params =  {
+            homeId:"xxxxxx" //家庭id
+        } */
+    let param = { ...params, operation: 'getTargetHomeInfo' }
+    return this.commandInterfaceWrapper(param)
+  },
   //获取当前设备信息
   getDeviceInfo() {
     let param = {
@@ -1265,7 +1292,11 @@ export default {
     let param = {
       operation: 'setIdleTimerDisabled'
     }
-    bridgeModule.commandInterface(param, function() {}, function() {})
+    bridgeModule.commandInterface(
+      param,
+      function() {},
+      function() {}
+    )
   },
   /*
    * ^5.7.0 [subscribeMessage]-订阅设备状态推送
@@ -1278,62 +1309,65 @@ export default {
     })
     return this.commandInterfaceWrapper(param)
   },
+  /*
+   * ^5.11.0 [subscribeMessage]-订阅设备状态推送
+   * @params: { data: xxxxx}
+   * xxxx是加密的SN
+   */
+  decrptySN(params) {
+    let param = Object.assign(params, {
+      operation: 'decrptySN'
+    })
+    return this.commandInterfaceWrapper(param)
+  },
   //**********APP业务接口***************END
 
-  //**********蓝牙接口***************START
-  blueToothModuleWrapper(apiName, param) {
-    return new Promise((resolve, reject) => {
-      blueToothModule[apiName](
-        JSON.stringify(param),
-        resData => {
-          resolve(this.convertToJson(resData))
-        },
-        error => {
-          reject(error)
-        }
-      )
-    })
-  },
+  //**********蓝牙接口***************START ==》此接口为二进制传输接口，已经在5.9作废
+  // blueToothModuleWrapper(apiName, param) {
+  //     return new Promise((resolve, reject) => {
+  //         blueToothModule[apiName](JSON.stringify(param),
+  //             (resData) => {
+  //                 resolve(this.convertToJson(resData))
+  //             },
+  //             (error) => {
+  //                 reject(error)
+  //             })
+  //     })
+  // },
   //获取蓝牙开启状态
   /* return:
         {status:1, //1表示蓝牙已打开，0：蓝牙关闭状态，2:：蓝牙正在重置，3：设备不支持蓝牙，4：蓝牙未授权}
     */
-  getBlueStatus(params = {}) {
-    return this.blueToothModuleWrapper('getBlueStatus', params)
-  },
+  // getBlueStatus(params = {}) {
+  //     return this.blueToothModuleWrapper("getBlueStatus", params)
+  // },
   //开始扫描蓝牙
   /*  param:{duration: number //持续时间, 单位：秒}
         当扫描到的蓝牙设备（蓝牙信息），app-->插件:
         receiveMessageFromApp({messageType:"blueScanResult",messageBody:{name:"xxx", deviceKey:"xxxxx"}})
      */
-  startBlueScan(params = {}) {
-    return this.blueToothModuleWrapper('startBlueScan', params)
-  },
+  // startBlueScan(params = {}) {
+  //     return this.blueToothModuleWrapper("startBlueScan", params)
+  // },
   //停止蓝牙扫描
   /* 当扫描结束（停止或超时），app -> 插件:
     receiveMessageFromApp({ messageType: "blueScanStop", messageBody: {} })
     */
-  stopBlueScan(params = {}) {
-    return this.blueToothModuleWrapper('stopBlueScan', params)
-  },
+  // stopBlueScan(params = {}) {
+  //     return this.blueToothModuleWrapper("stopBlueScan", params)
+  // },
   //保存蓝牙信息
   /* param:{deviceType:品类码, name:"xxx", deviceKey:"xxxxx"} */
-  addDeviceBlueInfo(params = {}) {
-    return this.blueToothModuleWrapper('addDeviceBlueInfo', params)
-  },
+  // addDeviceBlueInfo(params = {}) {
+  //     return this.blueToothModuleWrapper("addDeviceBlueInfo", params)
+  // },
   //获取之前保存的蓝牙信息
   /* param:{ deviceType: 品类码 }
        result:{status：0, //0: 执行成功, 1:执行失败, name:"xxx", deviceKey:"xxxxx"}
     */
-  getDeviceBlueInfo(params = {}) {
-    return this.blueToothModuleWrapper('getDeviceBlueInfo', params)
-  },
-  unbindDevice(params) {
-    let param = Object.assign(params, {
-      operation: 'unbindDevice'
-    })
-    return this.commandInterfaceWrapper(param)
-  },
+  // getDeviceBlueInfo(params = {}) {
+  //     return this.blueToothModuleWrapper("getDeviceBlueInfo", params)
+  // },
   //根据蓝牙信息建立蓝牙连接
   /* param:{name:"xxx",
         deviceKey:"xxxxx",
@@ -1344,25 +1378,198 @@ export default {
   /* 当收到蓝牙数据，app -> 插件:
     receiveMessageFromApp({ messageType: "receiveBlueInfo", messageBody: { deviceKey:"xxxxx", data: "xxx" } })
     */
-  setupBlueConnection(params = {}) {
-    return this.blueToothModuleWrapper('setupBlueConnection', params)
-  },
+  // setupBlueConnection(params = {}) {
+  //     return this.blueToothModuleWrapper("setupBlueConnection", params)
+  // },
   // 向蓝牙设备传输数据
   /* param:{
         deviceKey:"xxxxx",
         data:"xxx"
     } */
-  writeBlueInfo(params = {}) {
-    return this.blueToothModuleWrapper('writeBlueInfo', params)
-  },
+  // writeBlueInfo(params = {}) {
+  //     return this.blueToothModuleWrapper("writeBlueInfo", params)
+  // },
   //断开当前蓝牙连接
   /* 若是蓝牙意外断开, app -> 插件:
        receiveMessageFromApp({ messageType: "blueConnectionBreak", messageBody: {} })
     */
-  disconnectBlueConnection(params = {}) {
-    return this.blueToothModuleWrapper('disconnectBlueConnection', params)
-  },
+  // disconnectBlueConnection(params = {}) {
+  //     return this.blueToothModuleWrapper("disconnectBlueConnection", params)
+  // },
   //**********蓝牙接口***************END
+
+  //**********新蓝牙接口^5.9.0***************START
+  singleBlueToothModuleWrapper(apiName, param) {
+    return new Promise((resolve, reject) => {
+      if (util.toNum(weex.config.env.appVersion) >= util.toNum('5.9.0')) {
+        singleBlueToothModule[apiName](
+          JSON.stringify(param),
+          resData => {
+            resolve(this.convertToJson(resData))
+          },
+          error => {
+            reject(error)
+          }
+        )
+      } else {
+        reject({ errorCode: -1, errorMsg: 'version not support' })
+      }
+    })
+  },
+  //获取蓝牙开启状态
+  /* return:
+        当获取到蓝牙状态/蓝牙状态变更
+        receiveMessageFromApp({messageType:"singleBlueStatus",messageBody:{status:1, //1表示蓝牙已打开，0：蓝牙关闭状态，2:：蓝牙正在重置，3：设备不支持蓝牙，4：蓝牙未授权}})
+    */
+  getBlueStatus(params = {}) {
+    return this.singleBlueToothModuleWrapper('getBlueStatus', params)
+  },
+  //开始扫描蓝牙
+  /*  param:{
+        name:"midea_xx_xxxx",//选填
+        mac:"xxxxxxxxxxxx",//选填
+        duration: number //持续时间, 单位：秒}
+        当扫描到的蓝牙设备（蓝牙信息），app-->插件:
+        receiveMessageFromApp({messageType:"singleBlueScanStop",messageBody:{}})
+     */
+  startBlueScan(params = {}) {
+    return this.singleBlueToothModuleWrapper('startBlueScan', params)
+  },
+  //停止蓝牙扫描
+  /* 当扫描结束（停止或超时），app -> 插件:
+    receiveMessageFromApp({ messageType: "blueScanStop", messageBody: {} })
+    */
+  stopBlueScan(params = {}) {
+    return this.singleBlueToothModuleWrapper('stopBlueScan', params)
+  },
+  //根据蓝牙信息建立蓝牙连接
+  /* param:{
+        name:"midea_xx_xxxx", //蓝牙名称
+        token:"xxxx",//鉴权 长度32
+        mac:"xxxx"//蓝牙mac地址
+        applianceId:"xxx"//设备id
+    }
+
+    失败回调:errorCode:-1, //-1:连接失败, -2:发现服务失败, -3:密钥协商失败, -4:token校验失败, -5:10s超时
+    */
+  setupBlueConnection(params = {}) {
+    return this.singleBlueToothModuleWrapper('setupBlueConnection', params)
+  },
+
+  //查询设备当前状态,连接之后立马查询
+
+  /* param:{
+        mac:"xxxx",//12位蓝牙Mac地址
+        name:"midea_xx_xxxx",//蓝牙名称
+        applianceId:"xxx"//设备id
+    }
+    当收到蓝牙数据时，APP通知插件结果:
+    receiveMessageFromApp({ messageType: "receiveSingleBlueLuaInfo", messageBody: { applianceId:"xxx", data: {luaKey1:"xxx",luaKey2:"xxx"}}})
+    */
+  queryBlueLuaStatus(params = {}) {
+    return this.singleBlueToothModuleWrapper('queryBlueLuaStatus', params)
+  },
+
+  //查询设备当前状态,连接之后立马查询
+
+  /* param:{
+        mac:"xxxx",//12位蓝牙Mac地址
+        name:"midea_xx_xxxx",//蓝牙名称
+        applianceId:"xxx"
+        data:{
+            luaKey1:"xxx",
+            luaKey2:"xxx"
+        } //期望控制
+    }
+    当收到蓝牙数据时，APP通知插件结果:
+    receiveMessageFromApp({ messageType: "receiveSingleBlueLuaInfo", messageBody: { applianceId:"xxx", data: {luaKey1:"xxx",luaKey2:"xxx"}}})
+    */
+  sendBlueLuaRequest(params = {}) {
+    return this.singleBlueToothModuleWrapper('sendBlueLuaRequest', params)
+  },
+
+  //断开当前蓝牙连接
+  /* param:{
+        mac:"xxxx",//12位蓝牙Mac地址
+        name:"midea_xx_xxxx",//蓝牙名称
+        }
+    若是蓝牙意外断开, app -> 插件:
+       receiveMessageFromApp({ messageType: "singleBlueConnectionBreak", messageBody: {mac:"xxxx", name:"midea_xx_xxxx"} })
+    */
+  disconnectBlueConnection(params = {}) {
+    return this.singleBlueToothModuleWrapper('disconnectBlueConnection', params)
+  },
+
+  //下载文件
+  /* param:{
+        mac:"xxxx",//12位蓝牙Mac地址
+        name:"midea_xx_xxxx",//蓝牙名称
+        }
+        result: {
+            path:"xxx"//,下载文件本地路径
+        }
+        // 原生接口使用keepalive，多次回调。前端不可用promise处理
+    */
+  downFile(params = {}, callback, failCallBack) {
+    // return this.singleBlueToothModuleWrapper('downFile', params)
+    if (util.toNum(weex.config.env.appVersion) >= util.toNum('5.9.0')) {
+      singleBlueToothModule['downFile'](
+        JSON.stringify(params),
+        resData => {
+          callback && callback(this.convertToJson(resData))
+        },
+        error => {
+          failCallBack && failCallBack(error)
+        }
+      )
+    }
+  },
+  //查询当前固件指令
+  /* param:{
+            mac:"xxxx",//12位蓝牙Mac地址
+            name:"midea_xx_xxxx",//蓝牙名称
+        }
+    当收到蓝牙数据时，APP通知插件结果:
+        receiveMessageFromApp({ messageType: "receiveSingleBlueFirmwareStatus", messageBody: {mac:"xxxx", name:"midea_xx_xxxx",data: {
+            otaVersion:"xxx"//固件版本
+            status:"",//固件状态
+            revisonL:"xxx",//大版本号
+            revisionS:""//小版本号
+        }}})
+    */
+  readFirmwareStatus(params = {}) {
+    return this.singleBlueToothModuleWrapper('readFirmwareStatus', params)
+  },
+  //开始ota升级
+  /* param:{
+            mac:"xxxx",//12位蓝牙Mac地址
+            name:"midea_xx_xxxx",//蓝牙名称
+            source:"xxx"//bin文件路径
+        }
+    当收到蓝牙数据时，APP通知插件结果:
+        receiveMessageFromApp({ messageType: "receiveSingleBlueOtaProcess", messageBody: {mac:"xxxx", name:"midea_xx_xxxx",data: {
+            status:0//0:成功, -1:失败
+            process:1//1:擦拭空间, 2:请求写入, 3:写数据（写数据进度看progress）, 4:crc校验, 5:升级指令
+            progress：0.5//写bin文件进度,当process=3时使用
+        }}})
+    */
+  startFirmwareOta(params = {}) {
+    return this.singleBlueToothModuleWrapper('startFirmwareOta', params)
+  },
+  //重启蓝牙模块
+  /* param:{
+        mac:"xxxx",//12位蓝牙Mac地址
+        name:"midea_xx_xxxx",//蓝牙名称
+        }
+    当收到蓝牙数据时，APP通知插件结果:
+        receiveMessageFromApp({ messageType: "receiveSingleBlueRestart", messageBody: {mac:"xxxx", name:"midea_xx_xxxx",data: {
+            status:0//0成功，-1失败,
+        }}})
+    */
+  restartBlueDevice(params = {}) {
+    return this.singleBlueToothModuleWrapper('restartBlueDevice', params)
+  },
+  //**********蓝牙接口新蓝牙接口^5.9.0***************END
 
   //**********蓝牙MESH接口***************START
   blueToothMeshModuleWrapper(apiName, param) {
@@ -1435,6 +1642,98 @@ export default {
     } */
   deleteBlueMeshModelSubscription(params = {}) {
     return this.blueToothModuleWrapper('deleteBlueMeshModelSubscription', params)
-  }
+  },
   //**********蓝牙接口***************END
+
+  //**********思必驰语音识别接口***************START
+  // 启动语音监听
+  /*
+    param为对象:
+        {
+        auto: true/false，是否启动后马上监听还是处于暂停状态，默认是true (^5.10.0)
+        mode: local/online, //设置是APP本地词库识别还是网络在线识别，默认为local本地词库识别 (^5.10.0)
+        deviceType: "xxxx", //设备类型，如0xAC，可选项，当需要控制指定设备时填写 (^5.10.0)
+        deviceId: "xxxxx", //设备ID，可选项，可选项，当需要控制指定设备时填写 (^5.10.0)
+        }
+        当收到语音识别数据，app -> 插件:
+        receiveMessageFromApp({ messageType: "aiSpeechNotification", messageBody: {key:"xxxxxxxx"} }) //xxxxxx为匹配到的热词
+
+        当收到语音执行结果，app -> 插件:
+        receiveMessageFromApp({ messageType: "aiSpeechAcyionResult", messageBody: {...} }) //messageBody为思必驰执行返回结果
+    */
+  startSpeechMonitor(params = {}) {
+    return new Promise((resolve, reject) => {
+      aiSpeechModule['startSpeechMonitor'](
+        JSON.stringify(params),
+        resData => {
+          resolve(this.convertToJson(resData))
+        },
+        error => {
+          reject(error)
+        }
+      )
+    })
+  },
+  stopSpeechMonitor(params = {}) {
+    return new Promise((resolve, reject) => {
+      aiSpeechModule['stopSpeechMonitor'](
+        JSON.stringify(params),
+        resData => {
+          resolve(this.convertToJson(resData))
+        },
+        error => {
+          reject(error)
+        }
+      )
+    })
+  },
+  /* (^5.10.0) 恢复监听。在暂停状态下可以恢复。 */
+  resumeSpeechMonitor(params = {}) {
+    return new Promise((resolve, reject) => {
+      aiSpeechModule['resumeSpeechMonitor'](
+        JSON.stringify(params),
+        resData => {
+          resolve(this.convertToJson(resData))
+        },
+        error => {
+          reject(error)
+        }
+      )
+    })
+  },
+  /* (^5.10.0)暂停监听。在监听状态下可以停止。 */
+  pauseSpeechMonitor(params = {}) {
+    return new Promise((resolve, reject) => {
+      aiSpeechModule['pauseSpeechMonitor'](
+        JSON.stringify(params),
+        resData => {
+          resolve(this.convertToJson(resData))
+        },
+        error => {
+          reject(error)
+        }
+      )
+    })
+  },
+  /* (^5.10.0)播报文字。
+        params为对象:
+        {
+            content: string，//需要语音播报的句子
+        }
+    */
+  textToSpeech(params = {}) {
+    return new Promise((resolve, reject) => {
+      aiSpeechModule['textToSpeech'](
+        JSON.stringify(params),
+        resData => {
+          resolve(this.convertToJson(resData))
+        },
+        error => {
+          reject(error)
+        }
+      )
+    })
+  }
+
+  //**********思必驰语音识别接口***************START
 }
