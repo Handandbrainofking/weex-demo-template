@@ -12,6 +12,7 @@ const app = weex.requireModule('bridgeModule') //仅支持在native中使用
 import bridgeCore from 'bridgecore'
 import util from './util.js'
 import { DofMinibar } from 'dolphin-weex-ui'
+import { baseURL, ENV } from './config.js'
 
 let dolphinweex = {
   /**
@@ -182,7 +183,7 @@ let dolphinweex = {
       url += '?'
     }
     url += paramsStr
-    //link平台中使用navigatorEx,playground中使用navigator
+    //dolphin平台中使用navigatorEx,playground中使用navigator
     try {
       if (url.indexOf('http') == 0 || url.indexOf('file') == 0) navigatorEx.push(url)
       else {
@@ -441,14 +442,6 @@ let dolphinweex = {
       app.showError(options)
     } catch (e) {}
   },
-  native: {
-    name: '舒适化',
-    print() {
-      modal.toast({
-        message: 'hello2'
-      })
-    }
-  },
 
   install(Vue, options) {
     let that = dolphinweex
@@ -461,6 +454,10 @@ let dolphinweex = {
       }
     })
     Vue.prototype.$native = bridgeCore
+
+    Vue.prototype.$ENV = ENV
+
+    Vue.prototype.$baseURL = baseURL
 
     Vue.prototype.$alert = that.alert
 
@@ -505,8 +502,6 @@ let dolphinweex = {
     Vue.prototype.$showSuccess = that.showSuccess
 
     Vue.prototype.$showError = that.showError
-
-    Vue.prototype.$fixViewport = that.fixViewport
   }
 }
 

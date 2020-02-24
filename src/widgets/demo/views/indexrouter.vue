@@ -70,11 +70,11 @@ module.exports = {
   components: {},
   watch: {
     $route(to, from) {
-      // this.$alert(to.path);
+      this.$alert(to.path)
     }
   },
   mounted: function() {
-    this.$alert(this.$route)
+    // this.$alert(this.$route)
     globalEvent.addEventListener('androidback', e => {
       this.$pop()
     })

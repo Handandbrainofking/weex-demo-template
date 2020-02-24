@@ -79,7 +79,6 @@ module.exports = {
   }),
   mounted() {
     this.subTitle = 'Midea 模版项目'
-    this.$native.print()
   },
   methods: {
     jumpTo() {
@@ -90,7 +89,7 @@ module.exports = {
       this.$native.reload()
     },
     toast() {
-      this.$toast('hello')
+      this.$toast(this.$baseURL)
       this.$native.hapticFeedback()
     },
     alert() {
