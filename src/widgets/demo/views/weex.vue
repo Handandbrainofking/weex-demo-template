@@ -93,7 +93,7 @@ module.exports = {
       this.$native.hapticFeedback()
     },
     alert() {
-      this.$alert('World')
+      this.$alert('world')
     },
     skip() {
       this.$push('index.router.js')

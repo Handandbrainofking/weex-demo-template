@@ -16,261 +16,6 @@ import { baseURL, ENV } from './config.js'
 
 let dolphinweex = {
   /**
-   * 吐司信息
-   * @param msg {string} 提示文本
-   */
-  toast(msg, duration = 1) {
-    if (typeof msg !== 'string') {
-      msg = JSON.stringify(msg)
-    }
-    modal.toast({
-      message: msg || '',
-      duration: duration
-    })
-  },
-
-  /**
-   * 弹出警告
-   * @param msg {string} 提示文本
-   * @param callback {function} 点击确定后回调函数
-   * @param option {object} 参数
-   * @param option.okTitle {string} 确定按钮文本
-   */
-  alert(msg, callback, option) {
-    let okTitle = '确定'
-    if (option) {
-      if (option.okTitle) okTitle = option.okTitle
-    }
-    if (typeof msg !== 'string') {
-      msg = JSON.stringify(msg)
-    }
-    modal.alert(
-      {
-        message: msg || '',
-        duration: 1,
-        okTitle: okTitle
-      },
-      value => {
-        callback && callback(value)
-      }
-    )
-  },
-
-  /**
-   * 弹出确认框
-   * @param msg {string} 提示文本
-   * @param callback {function} 点击确定/取消后回调函数
-   * @param option {object} 参数
-   * @param option.okTitle {string} 确定按钮文本
-   * @param option.cancelTitle {string} 取消按钮文本
-   */
-  confirm(msg, callback, option) {
-    let okTitle = '确定',
-      cancelTitle = '取消'
-    if (option) {
-      if (option.okTitle) okTitle = option.okTitle
-      if (option.cancelTitle) cancelTitle = option.cancelTitle
-    }
-    modal.confirm(
-      {
-        message: msg || '',
-        duration: 0.4,
-        okTitle: okTitle,
-        cancelTitle: cancelTitle
-      },
-      value => {
-        callback && callback(value)
-      }
-    )
-  },
-
-  /**
-   * 显示一个组件（可设置动画）
-   * @param params
-   * @param callback
-   */
-  show(params, callback) {
-    let el = params.id
-    if (!el) {
-      return
-    }
-    let duration = params.duration
-    let transform = params.transform || 'translate(0, 0)'
-    let transformOrigin = params.transformOrigin || 'center center'
-    let timingFunction = params.timingFunction || 'ease'
-
-    animation.transition(
-      el,
-      {
-        styles: {
-          opacity: '1',
-          transform: transform,
-          transformOrigin: transformOrigin
-        },
-        duration: duration || 0,
-        timingFunction: timingFunction,
-        delay: 0
-      },
-      () => {
-        callback && callback()
-      }
-    )
-  },
-
-  /**
-   * 隐藏一个组件(可设置动画)
-   * @param params
-   * @param callback
-   */
-  hide(params, callback) {
-    let el = params.id
-    if (!el) {
-      return
-    }
-    let duration = params.duration
-    let transform = params.transform || 'translate(0, 0)'
-    let transformOrigin = params.transformOrigin || 'center center'
-    let timingFunction = params.timingFunction || 'ease'
-    animation.transition(
-      el,
-      {
-        styles: {
-          opacity: '0',
-          transform: transform,
-          transformOrigin: transformOrigin
-        },
-        duration: duration || 0,
-        timingFunction: timingFunction,
-        delay: 0
-      },
-      () => {
-        callback && callback()
-      }
-    )
-  },
-
-  /**
-   * 获取当前上下文路径
-   * @return {string} 当前上下文路径
-   */
-  getContextPath() {
-    let url = weex.config.bundleUrl
-    if (url.indexOf('?') > 0) {
-      url = url.substring(0, url.indexOf('?'))
-    }
-    url = url
-      .split('/')
-      .slice(0, -1)
-      .join('/')
-    return url
-  },
-
-  /**
-   * 加载一个新的页面(bundleJS)
-   * @method push
-   * @param url {string} bundle js 地址
-   * @param params {object} 传递的参数
-   */
-  push(url, params, callback) {
-    let paramsStr = ''
-    let _this = dolphinweex
-    if (params) {
-      for (let key in params) {
-        paramsStr += key + '=' + encodeURIComponent(params[key]) + '&'
-      }
-    }
-    if (url.indexOf('?') < 0 && paramsStr != '') {
-      url += '?'
-    }
-    url += paramsStr
-    //dolphin平台中使用navigatorEx,playground中使用navigator
-    try {
-      if (url.indexOf('http') == 0 || url.indexOf('file') == 0) navigatorEx.push(url)
-      else {
-        url = _this.getContextPath() + '/' + url
-        navigatorEx.push(url)
-      }
-    } catch (ex) {
-      if (url.indexOf('http') == 0 || url.indexOf('file') == 0) {
-        navigator.push(
-          {
-            url: url,
-            animated: 'true'
-          },
-          callback
-        )
-      } else {
-        url = _this.getContextPath() + '/' + url
-        navigator.push(
-          {
-            url: url,
-            animated: 'true'
-          },
-          callback
-        )
-      }
-    }
-  },
-
-  /**
-   * 返回上个页面
-   * @method pop
-   * @param options {object} 配置参数
-   * @param options.animated {bool} 是否需要过渡动画，默认true
-   * @param options.level {int} 返回层级，默认1
-   * @param callback {function} 回调函数
-   */
-  pop(callback, options) {
-    options = options || {}
-    navigator.pop(
-      {
-        animated: options.animated || 'true',
-        level: options.level || 1
-      },
-      callback
-    )
-  },
-
-  /**
-   * 退出当前轻应用
-   * @param options {object} 配置参数
-   */
-  close(options) {
-    options = options || {}
-    try {
-      navigatorEx.close()
-    } catch (ex) {
-      navigator.close({
-        animated: options.animated || 'true'
-      })
-    }
-  },
-
-  /**
-   * 获取页面参数(bundleJS),从url查询参数中获取
-   * @method getPageParams
-   * @return {object} 返回json数据
-   */
-  getPageParams() {
-    let params = {}
-    let url = weex.config.bundleUrl
-    let index = url.indexOf('?')
-    if (index > 0) {
-      let query = url.substring(index + 1)
-      let temp = query.split('&')
-      let key, value
-      for (var p in temp) {
-        if (temp[p]) {
-          key = temp[p].split('=')[0]
-          value = temp[p].split('=')[1]
-          params[key] = decodeURIComponent(value)
-        }
-      }
-    }
-    return params
-  },
-
-  /**
    * 发送POST请求
    * @method post
    * @param params {object} 请求参数
@@ -361,86 +106,28 @@ let dolphinweex = {
       )
     })
   },
-
   /**
-   * 适配viewport,主要处理ipad下的viewport
-   * @method fixViewport
+   * 获取页面参数(bundleJS),从url查询参数中获取
+   * @method getPageParams
+   * @return {object} 返回json数据
    */
-  fixViewport() {
-    let width = 750
-    if (util.isIPad()) {
-      width = 1536
+  getPageParams() {
+    let params = {}
+    let url = weex.config.bundleUrl
+    let index = url.indexOf('?')
+    if (index > 0) {
+      let query = url.substring(index + 1)
+      let temp = query.split('&')
+      let key, value
+      for (var p in temp) {
+        if (temp[p]) {
+          key = temp[p].split('=')[0]
+          value = temp[p].split('=')[1]
+          params[key] = decodeURIComponent(value)
+        }
+      }
     }
-    meta.setViewport({
-      width: width
-    })
-  },
-
-  /**
-   * 显示加载中进度条
-   * @method showLoading
-   * @param {object} params 参数
-   * @param {string} params.title 显示文本
-   */
-  showLoading(params) {
-    let options = { title: '加载中...' }
-    if (typeof params == 'string') {
-      options.title = params
-    }
-    if (typeof params == 'object') {
-      options = Object.assign(options, params)
-    }
-    try {
-      app.showLoading(options)
-    } catch (e) {}
-  },
-
-  /**
-   * 隐藏加载中进度条
-   * @method hideLoading
-   */
-  hideLoading() {
-    try {
-      app.hideLoading()
-    } catch (e) {}
-  },
-
-  /**
-   * 显示操作成功
-   * @method showSuccess
-   * @param {object} params 参数
-   * @param {string} params.title 显示文本
-   */
-  showSuccess(params) {
-    let options = { title: '操作成功' }
-    if (typeof params == 'string') {
-      options.title = params
-    }
-    if (typeof params == 'object') {
-      options = Object.assign(options, params)
-    }
-    try {
-      app.showSuccess(options)
-    } catch (e) {}
-  },
-
-  /**
-   * 显示操作失败
-   * @method showError
-   * @param {object} params 参数
-   * @param {string} params.title 显示文本
-   */
-  showError(params) {
-    let options = { title: '操作失败' }
-    if (typeof params == 'string') {
-      options.title = params
-    }
-    if (typeof params == 'object') {
-      options = Object.assign(options, params)
-    }
-    try {
-      app.showError(options)
-    } catch (e) {}
+    return params
   },
 
   install(Vue, options) {
@@ -459,23 +146,23 @@ let dolphinweex = {
 
     Vue.prototype.$baseURL = baseURL
 
-    Vue.prototype.$alert = that.alert
+    Vue.prototype.$alert = bridgeCore.alert
 
-    Vue.prototype.$toast = that.toast
+    Vue.prototype.$toast = bridgeCore.toast
 
-    Vue.prototype.$confirm = that.confirm
+    Vue.prototype.$confirm = bridgeCore.confirm
 
-    Vue.prototype.$show = that.show
+    Vue.prototype.$show = bridgeCore.show
 
-    Vue.prototype.$hide = that.hide
+    Vue.prototype.$hide = bridgeCore.hide
 
-    Vue.prototype.$getContextPath = that.getContextPath
+    Vue.prototype.$getContextPath = bridgeCore.getContextPath
 
-    Vue.prototype.$push = that.push
+    Vue.prototype.$push = bridgeCore.push
 
-    Vue.prototype.$pop = that.pop
+    Vue.prototype.$pop = bridgeCore.pop
 
-    Vue.prototype.$close = that.close
+    Vue.prototype.$close = bridgeCore.close
 
     Vue.prototype.$getPageParams = that.getPageParams
 
@@ -495,13 +182,13 @@ let dolphinweex = {
 
     Vue.prototype.$fixStyle = util.fixStyle
 
-    Vue.prototype.$showLoading = that.showLoading
+    Vue.prototype.$showLoading = bridgeCore.showLoading
 
-    Vue.prototype.$hideLoading = that.hideLoading
+    Vue.prototype.$hideLoading = bridgeCore.hideLoading
 
-    Vue.prototype.$showSuccess = that.showSuccess
+    Vue.prototype.$showSuccess = bridgeCore.showSuccess
 
-    Vue.prototype.$showError = that.showError
+    Vue.prototype.$showError = bridgeCore.showError
   }
 }
 
